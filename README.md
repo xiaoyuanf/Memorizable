@@ -6,12 +6,21 @@ I propose **Memorizable**, a flashcard application that utilizes [spaced repetit
 Memorizable can be used in second-language learning or any learning tasks that involve intensive memorization.
 
 Before coming to UBC, I was a journalist in China. I enjoyed reading and writing. I want to develop a sufficient vocabulary in English as I do in Chinese so that I can resume my hobby here. A flashcard application will definitely help me. There are a list of flashcard software out there. But most of them have features that are way too sophisticated than my needs. I want to build a minimalist app that’s tailored  for me and keep the option of future upgrades.
+### Algorithm
+I use a simplified [SM-2][2]algorithm to compute the interval before next time an item is shown:
+- If an item is visited for the 1st time, set `I(1) = 1 * EF` where:
+- - `I(1)` is the interval after the 1st repetition, and
+	- `EF` (ease factor) reflects the easiness of memorizing. `EF` is 0 for items that are **not** correctly remembered and 2 for items that are correctly remembered.
+- If an item is visited for the nth time, 
+- - If `I(n-1) != 0`,  set `I(n) = I(n-1) * EF`;
+	- If `I(n-1) == 0`, set `I(n) = 1 * EF`*.
 
 ## User Story
 - As a user, I want to be able to add a list of items to Memorizable.
 - As a user, I want to be able to add an item (question-answer pair) the the list.
 - As a user, I want to be able to view the question and then the answer of the item.
 - As a user, I want to mark an item on the list to be “easy" or “difficult”.
-- As a user, I want to be able to know when I will revisit the item given my feedback of “easy" or “difficult”.
+- As a user, I want to be able to know when I will revisit the item given my feedback of “easy" or “difficult” (For the next phase).
 
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition#List_of_spaced_repetition_software_programs
+[2]:	(https://www.supermemo.com/zh/archives1990-2015/english/ol/sm2)%20
