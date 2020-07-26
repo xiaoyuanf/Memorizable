@@ -9,11 +9,11 @@ Before coming to UBC, I was a journalist in China. I enjoyed reading and writing
 ### Algorithm
 I use a simplified [SM-2][2]algorithm to compute the interval before next time an item is shown:
 - If an item is visited for the 1st time, set `I(1) = 1 * EF` where:
-- - `I(1)` is the interval after the 1st repetition, and
+	- `I(1)` is the interval after the 1st repetition, and
 	- `EF` (ease factor) reflects the easiness of memorizing. `EF` is 0 for items that are **not** correctly remembered and 2 for items that are correctly remembered.
 - If an item is visited for the nth time, 
-- - If `I(n-1) != 0`,  set `I(n) = I(n-1) * EF`;
-	- If `I(n-1) == 0`, set `I(n) = 1 * EF`*.
+	- If `I(n-1) != 0`,  set `I(n) = I(n-1) * EF`;
+	- If `I(n-1) == 0`, set `I(n) = 1 * EF`\.
 
 ## User Story
 - As a user, I want to be able to add a list of items to Memorizable.
