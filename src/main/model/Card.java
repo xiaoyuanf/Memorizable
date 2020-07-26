@@ -3,17 +3,18 @@ package model;
 // represents a flashcard with content to memorize, difficulty, time of next visit
 public class Card {
 
-    private String question;
-    private String answer;
-    private boolean isEasy;
-    // private boolean isNeverShow;
-    private int interval = 0;
+    private String question;        // content on the question side of the flashcard
+    private String answer;          // content on the answer side of the flashcard
+    private boolean isEasy;         // the content is correctly remembered or not
+    // private boolean isNeverShow; // TO DO
+    private int interval;       // days before the card is shown again
 
-    // EFFECTS: create a card with given question and answer
     // REQUIRES: the question string is not empty
+    // EFFECTS: create a card with given question and answer
     public Card(String question, String answer) {
         this.question = question;
         this.answer = answer;
+        this.interval = 0;
     }
 
     public String getQuestion() {
@@ -24,25 +25,50 @@ public class Card {
         return answer;
     }
 
-    // EFFECTS: set a card to be easy
     // MODIFIES: this
+    // EFFECTS: set a card to be easy
     public void setEasy() {
         isEasy = true;
     }
 
-    // EFFECTS: set a card to be difficult
     // MODIFIES: this
+    // EFFECTS: set a card to be difficult
     public void setDifficult() {
         isEasy = false;
     }
 
+    public boolean getEasiness() {
+        return isEasy;
+    }
+
+    // REQUIRES: interval >= 0
+    // EFFECTS: - If the original interval == 0, return easeFactor where:
+    //	                            - easeFactor = 0 for items that are not correctly remembered
+    //	                            - easeFactor = 2 for items that are correctly remembered.
+    //          - If the original interval > 0, return interval * easeFactor
     private int computeInterval() {
-        return 0; // stub
+        int easeFactor;
+        if (isEasy) {
+            easeFactor = 2;
+        } else {
+            easeFactor = 0;
+        }
+        if (interval == 0) {
+            interval = easeFactor;
+        } else {
+            interval = easeFactor * interval;
+        }
+        return interval;
+    }
+
+    public void setInterval() {
+        interval = this.computeInterval();
     }
 
     public int getInterval() {
-        return computeInterval();
+        return interval;
     }
+
 
 
 
