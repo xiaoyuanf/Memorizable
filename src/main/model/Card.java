@@ -1,5 +1,7 @@
 package model;
 
+import exception.EmptyQuestionException;
+
 // represents a flashcard with content to memorize, difficulty, time of next visit
 public class Card {
 
@@ -11,8 +13,11 @@ public class Card {
 
     // REQUIRES: the question string is not empty
     // EFFECTS: create a card with given question and answer
-    public Card(String question, String answer) {
+    public Card(String question, String answer) throws EmptyQuestionException {
         this.question = question;
+        if (question.length() == 0) {
+            throw new EmptyQuestionException();
+        }
         this.answer = answer;
         this.interval = 0;
     }
@@ -41,7 +46,6 @@ public class Card {
         return isEasy;
     }
 
-    // REQUIRES: interval >= 0
     // EFFECTS: - If the original interval == 0, return easeFactor where:
     //	                            - easeFactor = 0 for items that are not correctly remembered
     //	                            - easeFactor = 2 for items that are correctly remembered.
@@ -68,8 +72,4 @@ public class Card {
     public int getInterval() {
         return interval;
     }
-
-
-
-
 }

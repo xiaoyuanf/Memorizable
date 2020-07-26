@@ -1,5 +1,6 @@
 package model;
 
+import exception.EmptyQuestionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,22 @@ class CardTest {
 
     @BeforeEach
     public void setup() {
-        testCard = new Card(q, a);
+        try {
+            testCard = new Card(q, a);
+        } catch (EmptyQuestionException e) {
+            fail("Caught wrong exception");
+        }
+    }
+
+    @Test
+    public void testCardConstructor() {
+        String emptyQ = "";
+        try {
+            Card testEmptyCard = new Card(emptyQ, a);
+            fail("Fail to catch EmptyQuestionException");
+        } catch (EmptyQuestionException e){
+
+        }
     }
 
     @Test
