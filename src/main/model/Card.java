@@ -13,13 +13,14 @@ public class Card {
 
     // REQUIRES: the question string is not empty
     // EFFECTS: create a card with given question and answer
-    public Card(String question, String answer) throws EmptyQuestionException {
-        this.question = question;
+    public Card(final String question, String answer) throws EmptyQuestionException {
         if (question.length() == 0) {
             throw new EmptyQuestionException();
         }
+        this.question = question;
         this.answer = answer;
         this.interval = 0;
+        this.isEasy = false;
     }
 
     public String getQuestion() {

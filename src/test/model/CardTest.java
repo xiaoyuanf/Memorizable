@@ -16,7 +16,7 @@ class CardTest {
         try {
             testCard = new Card(q, a);
         } catch (EmptyQuestionException e) {
-            fail("Caught wrong exception");
+            fail("EmptyQuestionException should not have been thrown");
         }
     }
 

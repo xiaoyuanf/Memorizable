@@ -16,11 +16,11 @@ I use a simplified [SM-2][2]algorithm to compute the interval before next time a
 	- If `I(n-1) == 0`, set `I(n) = 1 * EF`\.
 
 ## User Story
-- As a user, I want to be able to add a list of items to Memorizable.
-- As a user, I want to be able to add an item (question-answer pair) the the list.
+- As a user, I want to be able to create a list of items to Memorizable.
+- As a user, I want to be able to add an item (question-answer pair) to the list.
 - As a user, I want to be able to view the question and then the answer of the item.
-- As a user, I want to mark an item on the list to be “easy" or “difficult”.
-- As a user, I want to be able to know when I will revisit the item given my feedback of “easy" or “difficult” (For the next phase).
+- As a user, I want to mark an item in the list to be “easy" or “difficult”.
+- As a user, I want to be able to know when I will revisit an item given my feedback of “easy" or “difficult”.
 
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition#List_of_spaced_repetition_software_programs
 [2]:	(https://www.supermemo.com/zh/archives1990-2015/english/ol/sm2)%20
