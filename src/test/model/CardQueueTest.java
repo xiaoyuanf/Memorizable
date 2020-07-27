@@ -46,4 +46,11 @@ public class CardQueueTest {
         assertEquals(testQueue.getSize(), 1);
     }
 
+    @Test
+    public void testGetNextCardWhenEqual() {
+        testQueue.addCard(testCard1);
+        testQueue.addCard(testCard2);
+        testQueue.getNextCard();
+        assertEquals(testQueue.getSize(), 1);
+    }
 }
