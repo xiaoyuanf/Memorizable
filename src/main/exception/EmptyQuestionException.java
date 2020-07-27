@@ -1,4 +1,4 @@
 package exception;
 
-public class EmptyQuestionException extends Exception {
+public class EmptyQuestionException extends RuntimeException {
 }

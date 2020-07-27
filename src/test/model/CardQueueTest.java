@@ -11,17 +11,11 @@ public class CardQueueTest {
     CardQueue testQueue;
     String a = "answer";
     String q = "question";
-
-    Card testCard1, testCard2;
+    Card testCard1 = new Card(a, q);
+    Card testCard2 = new Card(a, q);
 
     @BeforeEach
     public void setup() {
-        try {
-            testCard1 = new Card(a, q);
-            testCard2 = new Card(a, q);
-        } catch (EmptyQuestionException e) {
-            fail("EmptyQuestionException should not have been thrown");
-        }
         testQueue = new CardQueue();
     }
 
