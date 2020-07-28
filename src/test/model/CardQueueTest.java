@@ -32,12 +32,15 @@ public class CardQueueTest {
     @Test
     public void testGetNextCard() {
         assertEquals(testQueue.getNextCard(), null);
-        testCard1.setDifficult();
-        testCard2.setEasy();
+        testCard1.setEasiness(false);
+        testCard2.setEasiness(true);
+        testCard2.updateInterval();
         testQueue.addCard(testCard1);
         testQueue.addCard(testCard2);
+        testQueue.addCard(testCard2);
+        testQueue.addCard(testCard2);
         assertEquals(testQueue.getNextCard(), testCard1);
-        assertEquals(testQueue.getSize(), 1);
+        assertEquals(testQueue.getSize(), 3);
     }
 
     @Test

@@ -42,40 +42,37 @@ class CardTest {
     }
 
     @Test
-    public void testSetEasy() {
-        testCard.setEasy();
+    public void testSetEasiness() {
+        testCard.setEasiness(true);
         assertTrue(testCard.getEasiness());
-    }
-
-    @Test
-    public void testSetDifficult() {
-        testCard.setDifficult();
+        testCard.setEasiness(false);
         assertFalse(testCard.getEasiness());
     }
 
+
     @Test
     public void testSetIntervalEasy() {
-        testCard.setEasy();
-        testCard.setInterval();
+        testCard.setEasiness(true);
+        testCard.updateInterval();
         assertEquals(testCard.getInterval(), 2);
-        testCard.setEasy();
-        testCard.setInterval();
+        testCard.setEasiness(true);
+        testCard.updateInterval();
         assertEquals(testCard.getInterval(),4);
-        testCard.setDifficult();
-        testCard.setInterval();
+        testCard.setEasiness(false);
+        testCard.updateInterval();
         assertEquals(testCard.getInterval(), 0);
     }
 
     @Test
     public void testSetIntervalDifficult() {
-        testCard.setDifficult();
-        testCard.setInterval();
+        testCard.setEasiness(false);
+        testCard.updateInterval();
         assertEquals(testCard.getInterval(), 0);
-        testCard.setDifficult();
-        testCard.setInterval();
+        testCard.setEasiness(false);
+        testCard.updateInterval();
         assertEquals(testCard.getInterval(), 0);
-        testCard.setEasy();
-        testCard.setInterval();
+        testCard.setEasiness(true);
+        testCard.updateInterval();
         assertEquals(testCard.getInterval(), 2);
     }
 

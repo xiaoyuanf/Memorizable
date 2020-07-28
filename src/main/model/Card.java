@@ -32,15 +32,9 @@ public class Card {
     }
 
     // MODIFIES: this
-    // EFFECTS: set a card to be easy
-    public void setEasy() {
-        isEasy = true;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: set a card to be difficult
-    public void setDifficult() {
-        isEasy = false;
+    // EFFECTS: set a card to be easy/difficult
+    public void setEasiness(boolean easy) {
+        isEasy = easy;
     }
 
     public boolean getEasiness() {
@@ -66,7 +60,7 @@ public class Card {
         return interval;
     }
 
-    public void setInterval() {
+    public void updateInterval() {
         interval = this.computeInterval();
     }
 
