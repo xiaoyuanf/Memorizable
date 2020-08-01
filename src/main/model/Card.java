@@ -13,7 +13,7 @@ public class Card {
 
     // REQUIRES: the question string is not empty
     // EFFECTS: create a card with given question and answer
-    public Card(final String question, String answer) throws EmptyQuestionException {
+    public Card(final String question, String answer) {
         if (question.length() == 0) {
             throw new EmptyQuestionException();
         }

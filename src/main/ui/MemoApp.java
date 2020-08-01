@@ -132,7 +132,7 @@ public class MemoApp {
     // EFFECTS: review flashcards, update the easiness,
     //          and add the cards back to the queue with new intervals
     private void reviewCards() {
-        for (int i = 0; i < myQueue.getSize(); i++) {
+        for (int i = 0; i < 6; i++) {// TODO
             Card currCard = myQueue.getNextCard();
             System.out.println("\n" + currCard.getQuestion());
             System.out.println("Press Enter key to continue...");
