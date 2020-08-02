@@ -11,12 +11,29 @@ public class CardQueueTest {
     CardQueue testQueue;
     String a = "answer";
     String q = "question";
-    Card testCard1 = new Card(a, q);
-    Card testCard2 = new Card(a, q);
+    Card testCard1;
+
+    {
+        try {
+            testCard1 = new Card(a, q);
+        } catch (EmptyQuestionException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    Card testCard2;
+
+    {
+        try {
+            testCard2 = new Card(a, q);
+        } catch (EmptyQuestionException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     @BeforeEach
     public void setup() {
-        testQueue = new CardQueue();
+        testQueue = new CardQueue("myTestQueue");
     }
 
     @Test
@@ -27,6 +44,11 @@ public class CardQueueTest {
         assertEquals(testQueue.getSize(), 1);
         testQueue.addCard(testCard2);
         assertEquals(testQueue.getSize(), 2);
+    }
+
+    @Test
+    public void testGetQueueName() {
+        assertEquals(testQueue.getQueueName(), "myTestQueue");
     }
 
     @Test

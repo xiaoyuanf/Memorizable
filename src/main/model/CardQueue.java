@@ -1,18 +1,25 @@
 package model;
 
+// import persistence.Reader;
+import com.google.gson.Gson;
+import persistence.Saveable;
+
+import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 // Represents a queue of flashcards to be reviewed.
 // The queue is ordered by the intervals of cards
-public class CardQueue {
+public class CardQueue implements Saveable {
     public Queue<Card> myQueue;
     Comparator<Card> comparator = new CardComparator();
+    public String queueName;
 
-    // EFFECTS: initializes newly created CardQueue as an empty PriorityQueue
-    public CardQueue() {
+    // EFFECTS: initializes newly created CardQueue as an empty PriorityQueue and a queueName
+    public CardQueue(String queueName) {
         myQueue = new PriorityQueue<Card>(10, comparator);
+        this.queueName = queueName;
     }
 
     // MODIFIES: this
@@ -32,13 +39,25 @@ public class CardQueue {
         return myQueue.size();
     }
 
-    // EFFECTS: return true if the queue is empty, false otherwise
-    public boolean isEmpty() {
-        if (myQueue.size() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+    // EFFECTS: gets the name of the queue
+    public String getQueueName() {
+        return this.queueName;
     }
 
+    // EFFECTS: return true if the queue is empty, false otherwise
+    public boolean isEmpty() {
+        return (myQueue.size() == 0);
+    }
+
+    // EFFECTS: write a cardqueue with queuename and cards, each in a line
+    @Override
+    public void save(PrintWriter printWriter) {
+        Gson gson = new Gson();
+        printWriter.print(queueName);
+        printWriter.println();
+        for (Card card : myQueue) {
+            printWriter.print(gson.toJson(card));
+            printWriter.println();
+        }
+    }
 }

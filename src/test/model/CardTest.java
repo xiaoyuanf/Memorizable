@@ -27,7 +27,7 @@ class CardTest {
             Card testEmptyCard = new Card(emptyQ, a);
             fail("Fail to catch EmptyQuestionException");
         } catch (EmptyQuestionException e){
-
+            // as expected
         }
     }
 
