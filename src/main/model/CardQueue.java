@@ -1,6 +1,5 @@
 package model;
 
-// import persistence.Reader;
 import com.google.gson.Gson;
 import persistence.Saveable;
 
@@ -46,7 +45,7 @@ public class CardQueue implements Saveable {
 
     // EFFECTS: return true if the queue is empty, false otherwise
     public boolean isEmpty() {
-        return (myQueue.size() == 0);
+        return (this.getSize() == 0);
     }
 
     // EFFECTS: write a cardqueue with queuename and cards, each in a line

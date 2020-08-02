@@ -125,6 +125,7 @@ public class MemoApp {
     private void loadQueue() {
         File dir = new File("./data/");
         // attained from https://stackoverflow.com/questions/15646358/how-to-list-only-non-hidden-and-non-system-file-in-jtree
+        // excludes hidden files
         File[] files = dir.listFiles(new FileFilter() {
             @Override
             public boolean accept(File file) {
