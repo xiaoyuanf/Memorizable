@@ -33,6 +33,10 @@ public class CardQueue implements Saveable {
         return myQueue.poll();
     }
 
+    public Card peekNextCard() {
+        return myQueue.peek();
+    }
+
     // EFFECTS: gets the number of cards currently in the queue
     public int getSize() {
         return myQueue.size();

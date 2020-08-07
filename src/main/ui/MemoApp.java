@@ -106,7 +106,7 @@ public class MemoApp {
         String queueFile = "./data/" + this.myQueueName + ".txt";
         try {
             Writer writer = new Writer(new File(queueFile));
-            writer.write(myQueue);
+            writer.write(this.myQueue);
             writer.close();
             System.out.println("Queue saved to file " + queueFile);
         } catch (FileNotFoundException e) {
@@ -143,11 +143,13 @@ public class MemoApp {
             }
             try {
                 int fileID = input.nextInt();
-                myQueue = Reader.readCardQueue(new File(String.valueOf(files[fileID])));
+                this.myQueue = Reader.readCardQueue(new File(String.valueOf(files[fileID])));
+                String path = String.valueOf(files[fileID]);
+                this.myQueueName = path.substring(7, path.length() - 4);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            runQueueMenu();
+            //runQueueMenu();
         }
     }
 
@@ -173,6 +175,8 @@ public class MemoApp {
         } else if (queueCommand.equals("r")) {
             reviewCards();
             saveQueue();
+        } else if (queueCommand.equals("b")) {
+            runMemo();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -215,21 +219,23 @@ public class MemoApp {
         if (myQueue.isEmpty()) {
             System.out.println("Please add some cards to the queue first!");
             runQueueMenu();
-        }
-        for (int i = 0; i < 6; i++) { // TODO let user decide how many to review
-            Card currCard = myQueue.getNextCard();
-            System.out.println("\n" + currCard.getQuestion());
-            System.out.println("Press Enter key to continue...");
-            try {
-                System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
+        } else {
+            while (myQueue.peekNextCard().getInterval() < 2) { // TODO let user decide how many to review
+                Card currCard = myQueue.getNextCard();
+                System.out.println("\n" + currCard.getQuestion());
+                System.out.println("Press Enter key to continue...");
+                try {
+                    System.in.read();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(currCard.getAnswer());
+
+                updateEasiness(currCard);
+
+                myQueue.addCard(currCard);
             }
-            System.out.println(currCard.getAnswer());
-
-            updateEasiness(currCard);
-
-            myQueue.addCard(currCard);
+            System.out.println("All cards due today are reviewed!");
         }
     }
 
