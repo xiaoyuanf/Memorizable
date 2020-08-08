@@ -7,13 +7,17 @@ import persistence.Reader;
 import persistence.Writer;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.Scanner;
+
+import static java.time.LocalDate.now;
 
 // Memorizable application
 public class MemoApp {
     private CardQueue myQueue;
     private Scanner input;
     private String myQueueName;
+    private LocalDate curDate = now();
 
     //EFFECTS: runs the Memorizable app
     public MemoApp() {
@@ -126,12 +130,7 @@ public class MemoApp {
         File dir = new File("./data/");
         // attained from https://stackoverflow.com/questions/15646358/how-to-list-only-non-hidden-and-non-system-file-in-jtree
         // excludes hidden files
-        File[] files = dir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return !file.isHidden();
-            }
-        });
+        File[] files = dir.listFiles(file -> !file.isHidden());
 
         if (files.length == 0) {
             System.out.println("Please create a queue first!");
@@ -149,7 +148,6 @@ public class MemoApp {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //runQueueMenu();
         }
     }
 
@@ -220,7 +218,7 @@ public class MemoApp {
             System.out.println("Please add some cards to the queue first!");
             runQueueMenu();
         } else {
-            while (myQueue.peekNextCard().getInterval() < 2) { // TODO let user decide how many to review
+            while (myQueue.peekNextCard().getNextViewDate().isEqual(curDate)) { // TODO let user decide how many to view
                 Card currCard = myQueue.getNextCard();
                 System.out.println("\n" + currCard.getQuestion());
                 System.out.println("Press Enter key to continue...");
@@ -232,6 +230,7 @@ public class MemoApp {
                 System.out.println(currCard.getAnswer());
 
                 updateEasiness(currCard);
+                currCard.setSchedule();
 
                 myQueue.addCard(currCard);
             }

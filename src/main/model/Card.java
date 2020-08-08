@@ -2,6 +2,8 @@ package model;
 
 import exception.EmptyQuestionException;
 
+import java.time.LocalDate;
+
 // represents a flashcard with content to memorize, difficulty, time of next visit
 public class Card {
 
@@ -10,6 +12,8 @@ public class Card {
     private boolean isEasy;         // the content is correctly remembered or not
     // private boolean isNeverShow; // TO DO
     private int interval;       // days before the card is shown again
+    private LocalDate initDate = LocalDate.now(); // date when the card is created
+    private LocalDate nextViewDate;  // date when the card will be reviewed again
 
     // REQUIRES: the question string is not empty
     // EFFECTS: create a card with given question and answer
@@ -21,6 +25,7 @@ public class Card {
         this.answer = answer;
         this.interval = 0;
         this.isEasy = false;
+        nextViewDate = initDate.plusDays(this.getInterval());
     }
 
     public String getQuestion() {
@@ -66,6 +71,14 @@ public class Card {
 
     public int getInterval() {
         return interval;
+    }
+
+    public void setSchedule() {
+        nextViewDate = nextViewDate.plusDays(this.getInterval());
+    }
+
+    public LocalDate getNextViewDate() {
+        return this.nextViewDate;
     }
 
 }

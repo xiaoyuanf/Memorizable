@@ -12,7 +12,7 @@ import java.util.Queue;
 // The queue is ordered by the intervals of cards
 public class CardQueue implements Saveable {
     public Queue<Card> myQueue;
-    Comparator<Card> comparator = new CardComparator();
+    Comparator<Card> comparator = new CardDateComparator();
     public String queueName;
 
     // EFFECTS: initializes newly created CardQueue as an empty PriorityQueue and a queueName
