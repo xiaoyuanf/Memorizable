@@ -12,22 +12,17 @@ public class MemorizableGUI extends JFrame {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JButton addQueueButton = new JButton("Add a new deck");
-        addQueueButton.setActionCommand("add");
-        addQueueButton.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO
-            }
-        });
+        //createButtons();
 
         queueArea = new QueueGUI(this);
         add(queueArea, BorderLayout.CENTER);
-        add(addQueueButton, BorderLayout.SOUTH);
+
 
         pack();
         setVisible(true);
     }
+
+
 
     public static void main(String[] args) {
         new MemorizableGUI();
