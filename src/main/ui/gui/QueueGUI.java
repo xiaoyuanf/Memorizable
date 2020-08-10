@@ -1,5 +1,7 @@
 package ui.gui;
 
+import exception.EmptyQuestionException;
+import model.Card;
 import model.CardQueue;
 import persistence.Reader;
 import persistence.Writer;
@@ -23,9 +25,7 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
     private MemorizableGUI memoGUI;
     private JList queues;
     private DefaultListModel listModel;
-    //private JScrollPane queueScrollPane;
-    //private static final String addQueueString = "Add a new deck";
-    //private static final String delQueueString = "Delete the deck";
+
     private JButton addQueueButton;
     private JButton delQueueButton;
     private JButton reviewQueueButton;
@@ -44,10 +44,12 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         this.delQueueButton = new JButton("Delete the deck");
         delQueueButton.setActionCommand("delete");
         delQueueButton.addActionListener(new DelListener());
+        delQueueButton.setEnabled(false);
 
         this.reviewQueueButton = new JButton("Review the deck");
         reviewQueueButton.setActionCommand("review");
         reviewQueueButton.addActionListener(new ReviewListener());
+        reviewQueueButton.setEnabled(false);
 
         JPanel buttonsPane = new JPanel();
         buttonsPane.setLayout(new FlowLayout());
@@ -103,9 +105,9 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         private void deleteSelection(int index) {
             String queueName = listModel.getElementAt(index).toString();
 
-            JFrame questionFrame = new JFrame();
+            JPanel questionPanel = new JPanel();
             int n = JOptionPane.showConfirmDialog(
-                    questionFrame,
+                    questionPanel,
                     "Are you sure you want to permanently delete " + queueName + " ?",
                     "",
                     JOptionPane.YES_NO_OPTION,
@@ -136,10 +138,10 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         }
 
         private void addNewDeck() {
-            JFrame addNewDeckFrame = new JFrame();
+            JPanel addNewDeckPanel = new JPanel();
 
             String s = (String) JOptionPane.showInputDialog(
-                    addNewDeckFrame,
+                    addNewDeckPanel,
                     "Give the deck a name:",
                     "Add a new deck",
                     JOptionPane.PLAIN_MESSAGE);
@@ -186,7 +188,7 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         }
     }
 
-    private class ReviewListener extends JFrame implements ActionListener  {
+    private class ReviewListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             CardQueue selectedQueue = null;
@@ -200,31 +202,69 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             }
 
             if (selectedQueue.getSize() == 0) {
-                JFrame newCardFrame = new JFrame();
-                addNewCard(newCardFrame);
+                //JFrame newCardFrame = new JFrame();
+
+                String[] strings = getUserInput();
+                Card newCard = addNewCard(strings);
+                selectedQueue.addCard(newCard);
+                //saveQueue(); TODO
             }
         }
 
-        private void addNewCard(JFrame newCardFrame) {
-
+        private String[] getUserInput() {
+            JPanel addNewCardPanel = new JPanel();
+            addNewCardPanel.setLayout(new BoxLayout(addNewCardPanel, BoxLayout.PAGE_AXIS));
             JTextArea questionArea = new JTextArea(3, 20);
+            questionArea.setAlignmentX(0); // prevents label from moving when typing
             JTextArea answerArea = new JTextArea(3, 20);
+            answerArea.setAlignmentX(0);
 
             JLabel questionLabel = new JLabel("Question:");
             questionLabel.setLabelFor(questionArea);
+            questionLabel.setAlignmentX(0);
             JLabel answerLabel = new JLabel("Answer:");
             answerLabel.setLabelFor(answerArea);
+            answerLabel.setAlignmentX(0);
 
-            newCardFrame.add(questionLabel);
-            newCardFrame.add(questionArea);
+            addNewCardPanel.add(questionLabel);
+            addNewCardPanel.add(questionArea);
 
-            newCardFrame.add(answerLabel);
-            newCardFrame.add(answerArea);
+            addNewCardPanel.add(answerLabel);
+            addNewCardPanel.add(answerArea);
 
+            int n = JOptionPane.showConfirmDialog(null, addNewCardPanel,
+                    "Add some cards to the deck!", JOptionPane.OK_CANCEL_OPTION);
+
+            String[] strings = new String[2];
+
+            if (n == JOptionPane.OK_OPTION) {
+                String q = questionArea.getText();
+                String a = answerArea.getText();
+
+                strings[0] = q;
+                strings[1] = a;
+            }
+
+            return strings;
         }
 
+        private Card addNewCard(String[] strings) {
+            Card newCard = null;
+            if (strings[0].equals("")) {
+                Toolkit.getDefaultToolkit().beep();
+                return newCard;
+            }
 
+            try {
+                newCard = new Card(strings[0], strings[1]);
+            } catch (EmptyQuestionException e) {
+                e.printStackTrace();
+            }
+            return newCard;
+        }
     }
+
+
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -233,11 +273,15 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             if (queues.getSelectedIndex() == -1) {
                 //No selection, disable the delete button.
                 delQueueButton.setEnabled(false);
+                reviewQueueButton.setEnabled(false);
 
             } else {
                 //Selection, enable the delete button.
                 delQueueButton.setEnabled(true);
+                reviewQueueButton.setEnabled(true);
             }
         }
     }
+
+
 }
