@@ -19,6 +19,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+
 // adapted from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java
 // create a list of decks where the decks can be added or deleted
 public class QueueGUI extends JPanel implements ListSelectionListener {
@@ -189,35 +191,105 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
     }
 
     private class ReviewListener implements ActionListener {
+        //private JPanel addNewCardPanel = new JPanel();
+        private JDialog reviewCardFrame;
+        private JTextArea questionArea = new JTextArea(3, 20);
+        private JTextArea answerArea = new JTextArea(3, 20);
+
+        private JButton addCardButton;
+        private JButton showAnswerButton;
+
+        private CardQueue selectedQueue;
+        private String path;
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            CardQueue selectedQueue = null;
             int index = queues.getSelectedIndex();
             String queueName = listModel.getElementAt(index).toString();
-            String path = "./data/" + queueName + ".txt";
+            this.path = "./data/" + queueName + ".txt";
             try {
-                selectedQueue = Reader.readCardQueue(new File(String.valueOf(path)));
+                this.selectedQueue = Reader.readCardQueue(new File(String.valueOf(path)));
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
 
             if (selectedQueue.getSize() == 0) {
-                //JFrame newCardFrame = new JFrame();
-
-                String[] strings = getUserInput();
-                Card newCard = addNewCard(strings);
-                selectedQueue.addCard(newCard);
-                //saveQueue(); TODO
+                createAddCardFrame();
+                createAddNewCardButtons();
+                addTextAreas();
+            } else {
+                createViewCardFrame();
+                createReviewCardButtons();
             }
         }
 
-        private String[] getUserInput() {
+        // obtained from https://blog.csdn.net/ygl19920119/article/details/79723512
+        private void createAddCardFrame() {
+            this.reviewCardFrame = new JDialog((Dialog) null, "Add some cards to the deck first!");
+            reviewCardFrame.setBounds(new Rectangle(
+                    (int) QueueGUI.this.getBounds().getX() + 50,
+                    (int) QueueGUI.this.getBounds().getY() + 50,
+                    (int) QueueGUI.this.getBounds().getWidth(),
+                    (int) QueueGUI.this.getBounds().getHeight()
+            ));
+            reviewCardFrame.setVisible(true);
+            reviewCardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        }
+
+        private void createViewCardFrame() {
+            this.reviewCardFrame = new JDialog();
+            reviewCardFrame.setBounds(new Rectangle(
+                    (int) QueueGUI.this.getBounds().getX() + 50,
+                    (int) QueueGUI.this.getBounds().getY() + 50,
+                    (int) QueueGUI.this.getBounds().getWidth(),
+                    (int) QueueGUI.this.getBounds().getHeight()
+            ));
+            reviewCardFrame.setVisible(true);
+            reviewCardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        }
+
+        private void createReviewCardButtons() {
+            this.addCardButton = new JButton("Add a new card");
+            addCardButton.setActionCommand("addCard");
+            addCardButton.addActionListener(new AddCardWhileReviewListener());
+
+            this.showAnswerButton = new JButton("Show answer");
+            showAnswerButton.setActionCommand("show");
+            //showAnswerButton.addActionListener(new ShowAnswerListener());
+            //showAnswerButton.setEnabled(false);
+
+            JPanel buttonsPane = new JPanel();
+            buttonsPane.setLayout(new FlowLayout());
+            buttonsPane.add(addCardButton);
+            buttonsPane.add(showAnswerButton);
+
+            buttonsPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
+            this.reviewCardFrame.add(buttonsPane, BorderLayout.SOUTH);
+        }
+
+        private void createAddNewCardButtons() {
+            this.addCardButton = new JButton("Add a new card");
+            addCardButton.setActionCommand("addCard");
+            addCardButton.addActionListener(new AddCardListener());
+
+            JPanel buttonsPane = new JPanel();
+            buttonsPane.setLayout(new FlowLayout());
+            buttonsPane.add(addCardButton);
+
+            buttonsPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
+            this.reviewCardFrame.add(buttonsPane, BorderLayout.SOUTH);
+        }
+
+        private void addTextAreas() {
             JPanel addNewCardPanel = new JPanel();
             addNewCardPanel.setLayout(new BoxLayout(addNewCardPanel, BoxLayout.PAGE_AXIS));
-            JTextArea questionArea = new JTextArea(3, 20);
-            questionArea.setAlignmentX(0); // prevents label from moving when typing
-            JTextArea answerArea = new JTextArea(3, 20);
-            answerArea.setAlignmentX(0);
+            addNewCardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+
+            this.questionArea.setAlignmentX(0); // prevents label from moving when typing
+            this.answerArea.setAlignmentX(0);
 
             JLabel questionLabel = new JLabel("Question:");
             questionLabel.setLabelFor(questionArea);
@@ -231,36 +303,72 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
 
             addNewCardPanel.add(answerLabel);
             addNewCardPanel.add(answerArea);
+            this.reviewCardFrame.add(addNewCardPanel, BorderLayout.CENTER);
+        }
 
-            int n = JOptionPane.showConfirmDialog(null, addNewCardPanel,
-                    "Add some cards to the deck!", JOptionPane.OK_CANCEL_OPTION);
+        private class AddCardListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addNewCard();
+                ReviewListener.this.answerArea.setText(""); // reset input areas
+                ReviewListener.this.questionArea.setText("");
+            }
 
-            String[] strings = new String[2];
+            private void addNewCard() {
+                String[] strings = getUserInput();
+                Card newCard = null;
 
-            if (n == JOptionPane.OK_OPTION) {
-                String q = questionArea.getText();
-                String a = answerArea.getText();
+                if (strings[0].equals("")) {
+                    Toolkit.getDefaultToolkit().beep();
+                        //employeeName.requestFocusInWindow();
+                        //employeeName.selectAll();
+                    return;
+                }
+
+                try {
+                    newCard = new Card(strings[0], strings[1]);
+                } catch (EmptyQuestionException e) {
+                    e.printStackTrace();
+                }
+
+                ReviewListener.this.selectedQueue.addCard(newCard);
+
+                saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
+            }
+
+            private void saveQueue(String path, CardQueue selectedQueue) {
+                try {
+                    Writer writer = new Writer(new File(path));
+                    writer.write(selectedQueue);
+                    writer.close();
+                } catch (FileNotFoundException e) {
+                    //System.out.println("Unable to save accounts to " + queueFile);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    // this is due to a programming error
+                }
+            }
+
+            private String[] getUserInput() {
+                String[] strings = new String[2];
+
+                String q = ReviewListener.this.questionArea.getText();
+                String a = ReviewListener.this.answerArea.getText();
 
                 strings[0] = q;
                 strings[1] = a;
-            }
 
-            return strings;
+                return strings;
+            }
         }
 
-        private Card addNewCard(String[] strings) {
-            Card newCard = null;
-            if (strings[0].equals("")) {
-                Toolkit.getDefaultToolkit().beep();
-                return newCard;
+        private class AddCardWhileReviewListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createAddCardFrame();
+                createAddNewCardButtons();
+                addTextAreas();
             }
-
-            try {
-                newCard = new Card(strings[0], strings[1]);
-            } catch (EmptyQuestionException e) {
-                e.printStackTrace();
-            }
-            return newCard;
         }
     }
 

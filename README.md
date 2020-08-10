@@ -29,13 +29,15 @@ I use a simplified [SM-2][2]algorithm to compute the interval before next time a
 ## Phase III User Stories
 - [x][3] The app should be able to schedule the reviews of flashcards on real-world dates, namely to show cards  due at a specific day when the app is running, and not to show cards that are not due.
 - [x]() The user should be able to add a new deck of flashcards through the GUI.
+- [x]() The user should be able to add a new card to an empty deck through the GUI.
+- []() The user should be able to review the cards through the GUI. (TODO)
 
 ## Instructions for Grader
-- You can generate the first required event by...
-	- You can generate the second required event by...
-	- You can locate my visual component by...  or You can trigger my audio component by...
-	- You can save the state of my application by...
-	- You can reload the state of my application by...
+- You can generate the first required event by ** clicking the “Add a new deck” button, naming the deck, then clicking OK**. You can also generate the first required event by **choosing a deck, clicking “Review the deck” button, typing question and answer, then clicking “Add a new card” button **.
+	- You can generate the second required event by **choosing one deck, clicking “Delete the deck”, the clicking Yes**.
+	- You can trigger my audio component by ** clicking the “Add a new deck” button, then clicking OK without naming the deck**. You can also trigger my audio component by ** adding a new deck with the same name of one existing deck**.
+	- The state of my application is automatically saved.
+	- You can reload the state of my application by **running it**. Files in the `./data/`folder will be loaded automatically.
 
 
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition#List_of_spaced_repetition_software_programs

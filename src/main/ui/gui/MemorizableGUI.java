@@ -12,11 +12,8 @@ public class MemorizableGUI extends JFrame {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        //createButtons();
-
         queueArea = new QueueGUI(this);
         add(queueArea, BorderLayout.CENTER);
-
 
         pack();
         setVisible(true);
