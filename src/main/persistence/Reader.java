@@ -43,17 +43,7 @@ public class Reader {
         return queue;
     }
 
-    // EFFECTS: returns a list of strings obtained by splitting line on DELIMITER
-    /*private static ArrayList<String> splitString(String line) {
-        String[] splits = line.split(DELIMITER);
-        return new ArrayList<>(Arrays.asList(splits));
-    }*/
-
-    // REQUIRES: components has size 4 where element 0 represents the
-    // id of the next account to be constructed, element 1 represents
-    // the id, elements 2 represents the name and element 3 represents
-    // the balance of the account to be constructed
-    // EFFECTS: returns an account constructed from components
+    // EFFECTS: returns an Card parsed from cardQueue
     private static Card parseCardQueue(String line) {
         Gson gson = new Gson();
         Card card = gson.fromJson(line, Card.class);

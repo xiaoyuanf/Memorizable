@@ -1,6 +1,7 @@
 package ui.gui;
 
 import model.CardQueue;
+import persistence.Reader;
 import persistence.Writer;
 
 import javax.swing.*;
@@ -44,23 +45,15 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         delQueueButton.setActionCommand("delete");
         delQueueButton.addActionListener(new DelListener());
 
-
         this.reviewQueueButton = new JButton("Review the deck");
-
-//        addQueueButton.setActionCommand("add");
-//        addQueueButton.addActionListener(new AbstractAction() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                //TODO
-//            }
-//        });
+        reviewQueueButton.setActionCommand("review");
+        reviewQueueButton.addActionListener(new ReviewListener());
 
         JPanel buttonsPane = new JPanel();
         buttonsPane.setLayout(new FlowLayout());
         buttonsPane.add(reviewQueueButton);
         buttonsPane.add(delQueueButton);
         buttonsPane.add(addQueueButton);
-
 
         buttonsPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
@@ -166,20 +159,12 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             }
 
             listModel.insertElementAt(s, index);
-            //If we just wanted to add to the end, we'd do this:
-            //listModel.addElement(employeeName.getText());
 
-            //Reset the text field.
-            //employeeName.requestFocusInWindow();
-            //employeeName.setText("");
-
-            //Select the new item and make it visible.
             queues.setSelectedIndex(index);
             queues.ensureIndexIsVisible(index);
 
             CardQueue addedQueue = new CardQueue(s);
             saveQueue(s, addedQueue);
-
         }
 
         protected boolean alreadyInList(String s) {
@@ -199,6 +184,46 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
                 // this is due to a programming error
             }
         }
+    }
+
+    private class ReviewListener extends JFrame implements ActionListener  {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            CardQueue selectedQueue = null;
+            int index = queues.getSelectedIndex();
+            String queueName = listModel.getElementAt(index).toString();
+            String path = "./data/" + queueName + ".txt";
+            try {
+                selectedQueue = Reader.readCardQueue(new File(String.valueOf(path)));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+
+            if (selectedQueue.getSize() == 0) {
+                JFrame newCardFrame = new JFrame();
+                addNewCard(newCardFrame);
+            }
+        }
+
+        private void addNewCard(JFrame newCardFrame) {
+
+            JTextArea questionArea = new JTextArea(3, 20);
+            JTextArea answerArea = new JTextArea(3, 20);
+
+            JLabel questionLabel = new JLabel("Question:");
+            questionLabel.setLabelFor(questionArea);
+            JLabel answerLabel = new JLabel("Answer:");
+            answerLabel.setLabelFor(answerArea);
+
+            newCardFrame.add(questionLabel);
+            newCardFrame.add(questionArea);
+
+            newCardFrame.add(answerLabel);
+            newCardFrame.add(answerArea);
+
+        }
+
+
     }
 
     @Override

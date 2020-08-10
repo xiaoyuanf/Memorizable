@@ -142,8 +142,9 @@ public class MemoApp {
             }
             try {
                 int fileID = input.nextInt();
-                this.myQueue = Reader.readCardQueue(new File(String.valueOf(files[fileID])));
                 String path = String.valueOf(files[fileID]);
+
+                this.myQueue = Reader.readCardQueue(new File(path));
                 this.myQueueName = path.substring(7, path.length() - 4);
             } catch (IOException e) {
                 e.printStackTrace();
