@@ -26,5 +26,18 @@ I use a simplified [SM-2][2]algorithm to compute the interval before next time a
 - As a user, when I go back to the main menu, I want to save the queue and the flashcards that I create.
 - As a user, I want to review existing queues of flashcards.
 
+## Phase III User Stories
+- [x][3] The app should be able to schedule the reviews of flashcards on real-world dates, namely to show cards  due at a specific day when the app is running, and not to show cards that are not due.
+- [x]() The user should be able to add a new deck of flashcards through the GUI.
+
+## Instructions for Grader
+- You can generate the first required event by...
+	- You can generate the second required event by...
+	- You can locate my visual component by...  or You can trigger my audio component by...
+	- You can save the state of my application by...
+	- You can reload the state of my application by...
+
+
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition#List_of_spaced_repetition_software_programs
 [2]:	(https://www.supermemo.com/zh/archives1990-2015/english/ol/sm2)%20
+[3]:	%20
