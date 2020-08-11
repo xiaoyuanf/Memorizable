@@ -21,8 +21,7 @@ import java.nio.file.Paths;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
-// adapted from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java
-// create a list of decks where the decks can be added or deleted
+// creates a list of decks where the decks can be added, reviewed or deleted
 public class QueueGUI extends JPanel implements ListSelectionListener {
     private MemorizableGUI memoGUI;
     private JList queues;
@@ -32,12 +31,15 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
     private JButton delQueueButton;
     private JButton reviewQueueButton;
 
+    // EFFECTS: creates the frame that contains a list of decks and three buttons
     public QueueGUI(MemorizableGUI memoGUI) {
         this.memoGUI = memoGUI;
         createQueueScrollPane();
         createButtons();
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds buttons to QueueGUI
     private void createButtons() {
         this.addQueueButton = new JButton("Add a new deck");
         addQueueButton.setActionCommand("add");
@@ -64,6 +66,9 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         add(buttonsPane, BorderLayout.SOUTH);
     }
 
+    // adapted from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java
+    // MODIFIES: this
+    // EFFECTS: creates a scroll pane that contains list of decks got from ./data/
     private void createQueueScrollPane() {
         setLayout(new BorderLayout(20, 20));
 
@@ -71,13 +76,15 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
 
         File dir = new File("./data/");
         File[] files = dir.listFiles(file -> !file.isHidden());
-        for (int i = 0; i < files.length; i++) {
-            String queuePath = files[i].getName();
-            listModel.addElement(queuePath.substring(0, queuePath.length() - 4));
+        if (files.length > 0) {
+            for (int i = 0; i < files.length; i++) {
+                String queuePath = files[i].getName();
+                listModel.addElement(queuePath.substring(0, queuePath.length() - 4));
+            }
         }
 
         // Create the list and put it in a scroll pane
-        queues = new JList(listModel);
+        this.queues = new JList(listModel);
         queues.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         queues.addListSelectionListener(this);
         JScrollPane queueScrollPane = new JScrollPane(queues);
@@ -94,16 +101,19 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         add(queuesPane);
     }
 
+    // inner ActionListener class that deletes selected deck
     private class DelListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             //This method can be called only if
             //there's a valid selection
             //so go ahead and remove whatever's selected.
-            int index = queues.getSelectedIndex();
+            int index = QueueGUI.this.queues.getSelectedIndex();
             deleteSelection(index);
         }
 
+        // MODIFIES: this
+        // EFFECTS: deletes selected deck from both ./data/ and the scroll pane
         private void deleteSelection(int index) {
             String queueName = listModel.getElementAt(index).toString();
 
@@ -124,7 +134,6 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
                 listModel.remove(index);
             }
 
-
             int size = listModel.getSize();
 
             if (size == 0) { //No deck left, disable delete.
@@ -133,16 +142,20 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         }
     }
 
+    // inner ActionListener class that adds a new deck
     private class AddListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             addNewDeck();
         }
 
+        // MODIFIES: this
+        // EFFECTS: adds a new deck to both the ./data/ folder and the scroll pane
+        //          with user-input name
         private void addNewDeck() {
             JPanel addNewDeckPanel = new JPanel();
 
-            String s = (String) JOptionPane.showInputDialog(
+            String s = JOptionPane.showInputDialog(
                     addNewDeckPanel,
                     "Give the deck a name:",
                     "Add a new deck",
@@ -162,7 +175,7 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
                 index++;
             }
 
-            listModel.insertElementAt(s, index);
+            QueueGUI.this.listModel.insertElementAt(s, index);
 
             queues.setSelectedIndex(index);
             queues.ensureIndexIsVisible(index);
@@ -171,10 +184,13 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             saveQueue(s, addedQueue);
         }
 
+        // adapted from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java
+        // EFFECTS: return true if the deck name user types already exists, false otherwise
         protected boolean alreadyInList(String s) {
             return listModel.contains(s);
         }
 
+        // EFFECTS: save the user created deck to ./data/ folder
         private void saveQueue(String s, CardQueue addedQueue) {
             String queueFile = "./data/" + s + ".txt";
             try {
@@ -190,8 +206,9 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         }
     }
 
+
+    // inner ActionListener class that reviews a deck
     private class ReviewListener implements ActionListener {
-        //private JPanel addNewCardPanel = new JPanel();
         private JDialog reviewCardFrame;
         private JTextArea questionArea = new JTextArea(3, 20);
         private JTextArea answerArea = new JTextArea(3, 20);
@@ -202,13 +219,17 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         private CardQueue selectedQueue;
         private String path;
 
+        // MODIFIES: this
+        // EFFECTS: if the selected deck is empty, prompts user to add cards,
+        //          otherwise review the cards in the deck // TODO
+        //          or adds cards
         @Override
         public void actionPerformed(ActionEvent e) {
             int index = queues.getSelectedIndex();
             String queueName = listModel.getElementAt(index).toString();
             this.path = "./data/" + queueName + ".txt";
             try {
-                this.selectedQueue = Reader.readCardQueue(new File(String.valueOf(path)));
+                this.selectedQueue = Reader.readCardQueue(new File(path));
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -224,6 +245,8 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         }
 
         // obtained from https://blog.csdn.net/ygl19920119/article/details/79723512
+        // MODIFIES: this
+        // EFFECTS: creates a frame where user can add cards
         private void createAddCardFrame() {
             this.reviewCardFrame = new JDialog((Dialog) null, "Add some cards to the deck first!");
             reviewCardFrame.setBounds(new Rectangle(
@@ -236,6 +259,8 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             reviewCardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         }
 
+        // MODIFIES: this
+        // EFFECTS: creates a frame where user can review cards
         private void createViewCardFrame() {
             this.reviewCardFrame = new JDialog();
             reviewCardFrame.setBounds(new Rectangle(
@@ -248,6 +273,8 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             reviewCardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         }
 
+        // MODIFIES: this
+        // EFFECTS: creates buttons for reviewing cards
         private void createReviewCardButtons() {
             this.addCardButton = new JButton("Add a new card");
             addCardButton.setActionCommand("addCard");
@@ -268,6 +295,8 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             this.reviewCardFrame.add(buttonsPane, BorderLayout.SOUTH);
         }
 
+        // MODIFIES: this
+        // EFFECTS: creates buttons for adding cards
         private void createAddNewCardButtons() {
             this.addCardButton = new JButton("Add a new card");
             addCardButton.setActionCommand("addCard");
@@ -282,6 +311,8 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             this.reviewCardFrame.add(buttonsPane, BorderLayout.SOUTH);
         }
 
+        // MODIFIES: this
+        // EFFECTS: create text areas where user can type the question and answer of a card
         private void addTextAreas() {
             JPanel addNewCardPanel = new JPanel();
             addNewCardPanel.setLayout(new BoxLayout(addNewCardPanel, BoxLayout.PAGE_AXIS));
@@ -306,6 +337,8 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             this.reviewCardFrame.add(addNewCardPanel, BorderLayout.CENTER);
         }
 
+
+        // inner ActionListener class that adds card
         private class AddCardListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -314,14 +347,14 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
                 ReviewListener.this.questionArea.setText("");
             }
 
+            // MODIFIES: this
+            // EFFECTS: gets user input, creates a new card, and adds the card to selected deck
             private void addNewCard() {
                 String[] strings = getUserInput();
                 Card newCard = null;
 
                 if (strings[0].equals("")) {
                     Toolkit.getDefaultToolkit().beep();
-                        //employeeName.requestFocusInWindow();
-                        //employeeName.selectAll();
                     return;
                 }
 
@@ -336,6 +369,7 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
                 saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
             }
 
+            // EFFECTS: save the selected queue after adding new cards
             private void saveQueue(String path, CardQueue selectedQueue) {
                 try {
                     Writer writer = new Writer(new File(path));
@@ -349,6 +383,7 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
                 }
             }
 
+            // EFFECTS: gets an array of String from user input
             private String[] getUserInput() {
                 String[] strings = new String[2];
 
@@ -362,6 +397,7 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             }
         }
 
+        // inner ActionListener class that adds cards while reviewing
         private class AddCardWhileReviewListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -372,8 +408,8 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         }
     }
 
-
-
+    // MODIFIES: this
+    // EFFECTS: Required by ActionListener. Enable/disable buttons given selection
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
@@ -390,6 +426,4 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
             }
         }
     }
-
-
 }

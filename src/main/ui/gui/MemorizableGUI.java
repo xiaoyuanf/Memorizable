@@ -4,9 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+// GUI of Memorizable
 public class MemorizableGUI extends JFrame {
     private QueueGUI queueArea;
 
+    //EFFECTS: initialize the GUI
     public MemorizableGUI() {
         super("Memorizable");
 
@@ -18,8 +20,6 @@ public class MemorizableGUI extends JFrame {
         pack();
         setVisible(true);
     }
-
-
 
     public static void main(String[] args) {
         new MemorizableGUI();

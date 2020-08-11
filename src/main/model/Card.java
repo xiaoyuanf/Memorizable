@@ -73,6 +73,8 @@ public class Card {
         return interval;
     }
 
+    //MODIFIES: this
+    //EFFECTS: set the nextViewDate to be current date + interval
     public void setSchedule() {
         nextViewDate = nextViewDate.plusDays(this.getInterval());
     }
