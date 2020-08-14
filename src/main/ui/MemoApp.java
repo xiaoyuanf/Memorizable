@@ -219,7 +219,7 @@ public class MemoApp {
 //            System.out.println("Please add some cards to the queue first!");
 //            runQueueMenu();
 //        } else {
-//            while (myQueue.peekNextCard().getNextViewDate().isEqual(curDate)) { // TODO let user decide how many to view
+// while (myQueue.peekNextCard().getNextViewDate().isEqual(curDate)) { // TODO let user decide how many to view
 //                Card currCard = myQueue.getNextCard();
 //                System.out.println("\n" + currCard.getQuestion());
 //                System.out.println("Press Enter key to continue...");
