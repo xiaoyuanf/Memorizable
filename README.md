@@ -30,21 +30,22 @@ I use a simplified [SM-2][2]algorithm to compute the interval before next time a
 - [x] The app should be able to schedule the reviews of flashcards on real-world dates, namely to show cards  due at a specific day when the app is running, and not to show cards that are not due.
 - [x] The user should be able to add a new deck of flashcards through the GUI.
 - [x] The user should be able to add a new card to an empty deck through the GUI.
-- [] The user should be able to review the cards through the GUI. (TODO)
+- []() The user should be able to review the cards through the GUI. (TODO)
 
-## Instructions for Grader
+### Instructions for Grader
 - You can generate the first required event by **clicking the “Add a new deck” button, naming the deck, then clicking OK**. You can also generate the first required event by **choosing a deck, clicking “Review the deck” button, typing question and answer, then clicking “Add a new card” button **.
 - You can generate the second required event by **choosing one deck, clicking “Delete the deck”, the clicking Yes**.
 - You can trigger my audio component by **clicking the “Add a new deck” button, then clicking OK without naming the deck**. You can also trigger my audio component by **adding a new deck with the same name of one existing deck**.
 - The state of my application is automatically saved.
 - You can reload the state of my application by **running it**. Files in the `./data/`folder will be loaded automatically.
 
-## Phase 4: Task 2
+## Phase 4
+### Phase 4: Task 2
 - The constructor of `Card` class has a robust design. In the `setup()` method in `TestCard` class, the exception is not expected. In the `testCardConstructor()` method in the same class, the exception is expected.
 - The `updateQueue()` method in the `CardQueue` class also has a robust design. The `testUpdateQueue` method in the `TestCardQueue` class has both scenarios of expecting and not expecting an exception.
 
-## Phase 4: Task 3
+### Phase 4: Task 3
 - Problem 1: poor cohesion in class `QueueGUI`. The original class had  6 inner classes and more than 600 lines of code. Everything happens in the GUI was in one place. I separated it into 4 classes, `DelListener`, `AddListener`, `ReviewListener` each is responsible for one function, and `QueueGUI` contains the top level list of user-input data and three buttons.
-	- Problem 2: high coupling between UI and model. Originally the updating of a CardQueue happened in the ui (`reviewCards()` method in the `MemoApp` class). For this task, I re-implemented it the `CardQueue` class. But I haven’t finished the same functionality in the gui.
+	-  Problem 2: high coupling between UI and model. Originally the updating of a CardQueue happened in the ui (`reviewCards()` method in the `MemoApp` class). For this task, I re-implemented it the `CardQueue` class. But I haven’t finished the same functionality in the gui.
 
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition
