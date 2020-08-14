@@ -165,7 +165,6 @@ class ReviewListener implements ActionListener {
                 Toolkit.getDefaultToolkit().beep();
                 return;
             }
-
             ReviewListener.this.selectedQueue.addCard(newCard);
             int index = queueGUI.queues.getSelectedIndex();
             String queueName = queueGUI.listModel.getElementAt(index).toString();
@@ -173,7 +172,7 @@ class ReviewListener implements ActionListener {
             saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
         }
 
-        // EFFECTS: save the selected queue after adding new cards
+        // EFFECTS: saves the selected queue after adding new cards
         private void saveQueue(String path, CardQueue selectedQueue) {
             try {
                 Writer writer = new Writer(new File(path));
