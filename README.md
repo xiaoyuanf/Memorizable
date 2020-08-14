@@ -44,6 +44,7 @@ I use a simplified [SM-2][2]algorithm to compute the interval before next time a
 - The `updateQueue()` method in the `CardQueue` class also has a robust design. The `testUpdateQueue` method in the `TestCardQueue` class has both scenarios of expecting and not expecting an exception.
 
 ## Phase 4: Task 3
-
+- Problem 1: poor cohesion in class `QueueGUI`. The original class had  6 inner classes and more than 600 lines of code. Everything happens in the GUI was in one place. I separated it into 4 classes, `DelListener`, `AddListener`, `ReviewListener` each is responsible for one function, and `QueueGUI` contains the top level list of user-input data and three buttons.
+	- Problem 2: high coupling between UI and model. Originally the updating of a CardQueue happened in the ui (`reviewCards()` method in the `MemoApp` class). For this task, I re-implemented it the `CardQueue` class. But I haven’t finished the same functionality in the gui.
 
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition
