@@ -4,6 +4,8 @@ import exception.EmptyQuestionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardTest {
@@ -34,51 +36,28 @@ class CardTest {
     @Test
     public void testGetQuestion() {
         assertEquals(q, testCard.getQuestion());
+        assertFalse(testCard.getQuestion().equals("q"));
     }
 
     @Test
     public void testGetAnswer() {
         assertEquals(a, testCard.getAnswer());
+        assertFalse(testCard.getAnswer().equals("a"));
     }
-
-//    @Test
-//    public void testSetEasiness() {
-//        testCard.setEasiness(true);
-//        assertTrue(testCard.getEasiness());
-//        testCard.setEasiness(false);
-//        assertFalse(testCard.getEasiness());
-//    }
-
-
-//    @Test
-//    public void testSetIntervalEasy() {
-//        testCard.setEasiness(true);
-//        testCard.updateInterval();
-//        assertEquals(testCard.getInterval(), 2);
-//        testCard.setEasiness(true);
-//        testCard.updateInterval();
-//        assertEquals(testCard.getInterval(),4);
-//        testCard.setEasiness(false);
-//        testCard.updateInterval();
-//        assertEquals(testCard.getInterval(), 0);
-//    }
-//
-//    @Test
-//    public void testSetIntervalDifficult() {
-//        testCard.setEasiness(false);
-//        testCard.updateInterval();
-//        assertEquals(testCard.getInterval(), 0);
-//        testCard.setEasiness(false);
-//        testCard.updateInterval();
-//        assertEquals(testCard.getInterval(), 0);
-//        testCard.setEasiness(true);
-//        testCard.updateInterval();
-//        assertEquals(testCard.getInterval(), 2);
-//    }
 
     @Test
     public void testSetSchedule() {
-
+        assertEquals(testCard.getNextViewDate(), LocalDate.now());
+        testCard.updateInterval(true);
+        testCard.setSchedule();
+        assertEquals(testCard.getNextViewDate(), LocalDate.now().plusDays(2));
+        testCard.updateInterval(true);
+        testCard.setSchedule();
+        assertEquals(testCard.getNextViewDate(), LocalDate.now().plusDays(6));
+        LocalDate date = testCard.getNextViewDate();
+        testCard.updateInterval(false);
+        testCard.setSchedule();
+        assertEquals(testCard.getNextViewDate(), date);
     }
 
     @Test

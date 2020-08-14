@@ -35,16 +35,6 @@ public class Card {
         return answer;
     }
 
-    // MODIFIES: this
-    // EFFECTS: set a card to be easy/difficult
-//    public void setEasiness(boolean easy) {
-//        isEasy = easy;
-//    }
-
-//    public boolean getEasiness() {
-//        return isEasy;
-//    }
-
     // EFFECTS: - If the original interval == 0, return easeFactor where:
     //	                            - easeFactor = 0 for items that are not correctly remembered
     //	                            - easeFactor = 2 for items that are correctly remembered.
@@ -63,9 +53,6 @@ public class Card {
         }
     }
 
-//    public void updateInterval() {
-//        interval = this.computeInterval();
-//    }
 
     public int getInterval() {
         return interval;

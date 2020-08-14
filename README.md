@@ -40,5 +40,10 @@ I use a simplified [SM-2][2]algorithm to compute the interval before next time a
 - You can reload the state of my application by **running it**. Files in the `./data/`folder will be loaded automatically.
 
 ## Phase 4: Task 2
+- The constructor of `Card` class has a robust design. In the `setup()` method in `TestCard` class, the exception is not expected. In the `testCardConstructor()` method in the same class, the exception is expected.
+- The `updateQueue()` method in the `CardQueue` class also has a robust design. The `testUpdateQueue` method in the `TestCardQueue` class has both scenarios of expecting and not expecting an exception.
+
+## Phase 4: Task 3
+
 
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition
