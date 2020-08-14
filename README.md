@@ -39,3 +39,6 @@ I use a simplified [SM-2][2]algorithm to compute the interval before next time a
 - The state of my application is automatically saved.
 - You can reload the state of my application by **running it**. Files in the `./data/`folder will be loaded automatically.
 
+## Phase 4: Task 2
+
+[1]:	https://en.wikipedia.org/wiki/Spaced_repetition

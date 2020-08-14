@@ -41,39 +41,49 @@ class CardTest {
         assertEquals(a, testCard.getAnswer());
     }
 
+//    @Test
+//    public void testSetEasiness() {
+//        testCard.setEasiness(true);
+//        assertTrue(testCard.getEasiness());
+//        testCard.setEasiness(false);
+//        assertFalse(testCard.getEasiness());
+//    }
+
+
+//    @Test
+//    public void testSetIntervalEasy() {
+//        testCard.setEasiness(true);
+//        testCard.updateInterval();
+//        assertEquals(testCard.getInterval(), 2);
+//        testCard.setEasiness(true);
+//        testCard.updateInterval();
+//        assertEquals(testCard.getInterval(),4);
+//        testCard.setEasiness(false);
+//        testCard.updateInterval();
+//        assertEquals(testCard.getInterval(), 0);
+//    }
+//
+//    @Test
+//    public void testSetIntervalDifficult() {
+//        testCard.setEasiness(false);
+//        testCard.updateInterval();
+//        assertEquals(testCard.getInterval(), 0);
+//        testCard.setEasiness(false);
+//        testCard.updateInterval();
+//        assertEquals(testCard.getInterval(), 0);
+//        testCard.setEasiness(true);
+//        testCard.updateInterval();
+//        assertEquals(testCard.getInterval(), 2);
+//    }
+
     @Test
-    public void testSetEasiness() {
-        testCard.setEasiness(true);
-        assertTrue(testCard.getEasiness());
-        testCard.setEasiness(false);
-        assertFalse(testCard.getEasiness());
+    public void testSetSchedule() {
+
     }
 
-
     @Test
-    public void testSetIntervalEasy() {
-        testCard.setEasiness(true);
-        testCard.updateInterval();
-        assertEquals(testCard.getInterval(), 2);
-        testCard.setEasiness(true);
-        testCard.updateInterval();
-        assertEquals(testCard.getInterval(),4);
-        testCard.setEasiness(false);
-        testCard.updateInterval();
-        assertEquals(testCard.getInterval(), 0);
-    }
+    public void testGetNextViewDate() {
 
-    @Test
-    public void testSetIntervalDifficult() {
-        testCard.setEasiness(false);
-        testCard.updateInterval();
-        assertEquals(testCard.getInterval(), 0);
-        testCard.setEasiness(false);
-        testCard.updateInterval();
-        assertEquals(testCard.getInterval(), 0);
-        testCard.setEasiness(true);
-        testCard.updateInterval();
-        assertEquals(testCard.getInterval(), 2);
     }
 
 }

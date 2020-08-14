@@ -31,17 +31,17 @@ public class CardComparatorTest {
         assertEquals(cardComparator.compare(testCard1, testCard2), 0);
     }
 
-    @Test
-    public void testLessThan() {
-        testCard2.setEasiness(true);
-        testCard2.updateInterval();
-        assertEquals(cardComparator.compare(testCard1, testCard2), -1);
-    }
+//    @Test
+//    public void testLessThan() {
+//        testCard2.setEasiness(true);
+//        testCard2.updateInterval();
+//        assertEquals(cardComparator.compare(testCard1, testCard2), -1);
+//    }
 
-    @Test
-    public void testGreaterThan() {
-        testCard1.setEasiness(true);
-        testCard1.updateInterval();
-        assertEquals(cardComparator.compare(testCard1, testCard2), 1);
-    }
+//    @Test
+//    public void testGreaterThan() {
+//        testCard1.setEasiness(true);
+//        testCard1.updateInterval();
+//        assertEquals(cardComparator.compare(testCard1, testCard2), 1);
+//    }
 }
