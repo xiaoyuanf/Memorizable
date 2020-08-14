@@ -45,25 +45,24 @@ class ReviewListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         int index = queueGUI.queues.getSelectedIndex();
         String queueName = queueGUI.listModel.getElementAt(index).toString();
-        this.path = "./data/" + queueName + ".txt";
+//        this.path = "./data/" + queueName + ".txt";
         try {
-            this.selectedQueue = Reader.readCardQueue(new File(path));
+            this.selectedQueue = Reader.readCardQueue(new File("./data/" + queueName + ".txt"));
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+            //
         }
 
         this.btnPanel = createButtonPanel();
-
+        JButton addCardButton = new JButton("Add a new card");
         if (selectedQueue.getSize() == 0) {
             this.reviewCardFrame = createDialog("Add some cards to the deck first!");
-            JButton addCardButton = new JButton("Add a new card");
             addCardButton.addActionListener(new AddCardListener());
             btnPanel.add(addCardButton);
             addTextAreas();
         } else {
             this.reviewCardFrame = createDialog("");
             addReviewCardQuestionPanel();
-            JButton addCardButton = new JButton("Add a new card");
+            //JButton addCardButton = new JButton("Add a new card");
             addCardButton.addActionListener(new AddCardWhileReviewListener());
 
             JButton showAnswerButton = new JButton("Show answer");
@@ -103,10 +102,6 @@ class ReviewListener implements ActionListener {
         reviewCardPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
         reviewCardPanel.add(new JLabel(selectedQueue.peekNextCard().getQuestion()));
     }
-
-
-
-
 
     // MODIFIES: this
     // EFFECTS: creates buttons for adding cards
@@ -172,7 +167,9 @@ class ReviewListener implements ActionListener {
             }
 
             ReviewListener.this.selectedQueue.addCard(newCard);
-
+            int index = queueGUI.queues.getSelectedIndex();
+            String queueName = queueGUI.listModel.getElementAt(index).toString();
+            ReviewListener.this.path = "./data/" + queueName + ".txt";
             saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
         }
 
