@@ -48,7 +48,7 @@ public class DelListener implements ActionListener {
 
         int size = qgui.listModel.getSize();
 
-        if (size == 0) { //No deck left, disable delete.
+        if (size == 0) { //No deck left, disable delete button.
             qgui.delQueueButton.setEnabled(false);
         }
     }
