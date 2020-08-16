@@ -1,4 +1,4 @@
-# My Personal Project - Memorizable
+Memorizable
 
 ## Proposal
 I propose **Memorizable**, a flashcard application that utilizes [spaced repetition][1] to facilitate memorization.  Items to memorize are stored in Memorizable as question-answer pairs. When a pair is due to be reviewed, the question (e.g., a new word) will be shown, and the user will try to recall the answer (in this case, the definition of the word). The user will then manually reveal the answer and tell Memorizable how difficult it was to answer. The application will compute the intervals between each review of an item based on the user’s feedback. Newly introduced and more difficult items will show up more frequently. 
