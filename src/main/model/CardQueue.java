@@ -2,19 +2,18 @@ package model;
 
 import com.google.gson.Gson;
 import exception.EmptyQueueException;
+import exception.NoMoreToReviewException;
 import persistence.Saveable;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 import static java.time.LocalDate.now;
 
 // Represents a queue of flashcards to be reviewed.
 // The queue is ordered by the intervals of cards
-public class CardQueue implements Saveable {
+public class CardQueue extends Observable implements Saveable  {
     public Queue<Card> myQueue;
     Comparator<Card> comparator = new CardDateComparator();
     public String queueName;
@@ -56,24 +55,17 @@ public class CardQueue implements Saveable {
         return (this.getSize() == 0);
     }
 
-    public void updateQueue(boolean easy) throws EmptyQueueException {
-        if (this.isEmpty()) {
-            throw new EmptyQueueException();
-        } else {
-            //while (this.peekNextCard().getNextViewDate().isEqual(now())) { // TODO let user decide how many to view
-            Card currCard = this.getNextCard();
-                //System.out.println("\n" + currCard.getQuestion());
-                //System.out.println("Press Enter key to continue...");
-
-                //System.out.println(currCard.getAnswer());
-
-                //updateEasiness(currCard);
-            currCard.updateInterval(easy);
-            currCard.setSchedule();
-
-            myQueue.add(currCard);
+    public void updateQueue(boolean easy) throws NoMoreToReviewException {
+        Card currCard = this.getNextCard();
+        if (currCard.getNextViewDate().isAfter(now())) {
+            throw new NoMoreToReviewException();
         }
-            //System.out.println("All cards due today are reviewed!");
+        currCard.updateInterval(easy);
+        currCard.setSchedule();
+        myQueue.add(currCard);
+
+        setChanged();
+        notifyObservers();
     }
 
     // EFFECTS: write a cardqueue with queuename and cards, each in a line

@@ -1,2 +1,0 @@
-test1
-{"question":"test1","answer":"test1","interval":0,"nextViewDate":{"year":2020,"month":8,"day":13}}

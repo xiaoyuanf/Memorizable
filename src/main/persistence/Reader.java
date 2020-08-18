@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observer;
 
 // a reader that reads CardQueue data from a file
 // attained and adapted from
