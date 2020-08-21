@@ -5,6 +5,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.io.File;
+import java.io.FileFilter;
+
 
 // creates a list of decks where the decks can be added, reviewed or deleted
 public class QueueGUI extends JPanel implements ListSelectionListener {
@@ -57,6 +59,7 @@ public class QueueGUI extends JPanel implements ListSelectionListener {
         listModel = new DefaultListModel();
 
         File dir = new File("./data/");
+        dir.mkdirs();
         File[] files = dir.listFiles(file -> !file.isHidden());
         if (files.length > 0) {
             for (int i = 0; i < files.length; i++) {
