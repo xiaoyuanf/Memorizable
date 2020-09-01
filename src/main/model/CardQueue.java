@@ -13,7 +13,7 @@ import static java.time.LocalDate.now;
 
 // Represents a queue of flashcards to be reviewed.
 // The queue is ordered by the intervals of cards
-public class CardQueue extends Observable implements Saveable  {
+public class CardQueue implements Saveable  {
     public Queue<Card> myQueue;
     Comparator<Card> comparator = new CardDateComparator();
     public String queueName;
@@ -36,7 +36,11 @@ public class CardQueue extends Observable implements Saveable  {
         return myQueue.poll();
     }
 
-    public Card peekNextCard() {
+    public Card peekNextCard() throws NoMoreToReviewException {
+        Card currCard = myQueue.peek();
+        if (currCard.getNextViewDate().isAfter(now())) {
+            throw new NoMoreToReviewException();
+        }
         return myQueue.peek();
     }
 
@@ -55,17 +59,11 @@ public class CardQueue extends Observable implements Saveable  {
         return (this.getSize() == 0);
     }
 
-    public void updateQueue(boolean easy) throws NoMoreToReviewException {
+    public void updateQueue(boolean easy) {
         Card currCard = this.getNextCard();
-        if (currCard.getNextViewDate().isAfter(now())) {
-            throw new NoMoreToReviewException();
-        }
         currCard.updateInterval(easy);
         currCard.setSchedule();
         myQueue.add(currCard);
-
-        setChanged();
-        notifyObservers();
     }
 
     // EFFECTS: write a cardqueue with queuename and cards, each in a line

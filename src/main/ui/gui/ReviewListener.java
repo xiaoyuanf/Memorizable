@@ -6,20 +6,16 @@ import model.Card;
 import model.CardQueue;
 import persistence.Reader;
 import persistence.Writer;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Observable;
-import java.util.Observer;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
@@ -31,11 +27,8 @@ class ReviewListener implements ActionListener {
     private JTextArea answerArea = new JTextArea(3, 20);
     private JPanel btnPanel;
 
-
-
     private CardQueue selectedQueue;
     private String path;
-
 
     private Card currCard;
 
@@ -62,115 +55,17 @@ class ReviewListener implements ActionListener {
             this.reviewCardFrame = createAddCardDialog("Add some cards to the deck first!");
             addCardDialogComponents(reviewCardFrame);
         } else {
-            currCard = selectedQueue.peekNextCard();
-            this.reviewCardFrame = new ReviewCardDialog(queueGUI);
-        //createReviewCardDialog("");
-            //ReviewCardDialog testDialog = new ReviewCardDialog(queueGUI);
+            try {
+                currCard = selectedQueue.peekNextCard();
+                this.reviewCardFrame = new ReviewCardDialog(queueGUI);
+            } catch (NoMoreToReviewException exception) {
+                JOptionPane.showMessageDialog(null, "All cards due today have been reviewed! Try add some new cards.");
+                this.reviewCardFrame = createAddCardDialog("Add some cards to the deck!");
+                addCardDialogComponents(reviewCardFrame);
+            }
 
-
-//            testDialog.addPropertyChangeListener(testDialog.QUESTION,
-//                    new PropertyChangeListener() {
-//
-//                        @Override
-//                        public void propertyChange(PropertyChangeEvent pcEvt) {
-//                            String question = testDialog.getQuestion();
-//                            testDialog.setJLabel1Text(itemText);
-//                        }
-//                    });
         }
     }
-
-//    private void createReviewCardDialog(String title) {
-//        this.reviewCardFrame = new JDialog((Dialog) null, title);
-//        reviewCardFrame.setBounds(new Rectangle(
-//                (int) queueGUI.getBounds().getX() + 50,
-//                (int) queueGUI.getBounds().getY() + 50,
-//                (int) queueGUI.getBounds().getWidth(),
-//                (int) queueGUI.getBounds().getHeight()
-//        ));
-//        reviewCardFrame.setVisible(true);
-//        reviewCardFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//
-//        JPanel questionSide = createQuestionSide();
-//        JPanel answerSide = createAnswerSide();
-//
-//        reviewCardPanel = new JPanel();
-//        reviewCardPanel.setLayout(c);
-//        reviewCardFrame.add(reviewCardPanel, BorderLayout.CENTER);
-//
-//        reviewCardPanel.add(questionSide, "q");
-//
-//        reviewCardPanel.add(answerSide, "a");
-//        //return myDialog;
-//    }
-
-//    private JPanel createQuestionSide() {
-//        JPanel questionSide = new JPanel();
-//        questionSide.setLayout(new BoxLayout(questionSide, BoxLayout.PAGE_AXIS));
-//        this.btnPanel = createButtonPanel();
-//        JButton addCardButton = new JButton("Add a new card");
-//        addCardButton.addActionListener(new AddCardWhileReviewListener());
-//
-//        JButton showAnswerButton = new JButton("Show answer");
-//        showAnswerButton.addActionListener(new ShowAnswerListener());
-//
-//        //addReviewCardQuestionPanel();
-//        JPanel questionPanel = new JPanel();
-//        questionSide.add(questionPanel, BorderLayout.CENTER);
-//        questionPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
-//
-//        // read selectedQueue again to catch changes
-////        try {
-////            this.selectedQueue = Reader.readCardQueue(new File(path));
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//        questionPanel.add(new JLabel(currCard.getQuestion()));
-//
-//        btnPanel.add(addCardButton);
-//        btnPanel.add(showAnswerButton);
-//        questionSide.add(btnPanel, BorderLayout.SOUTH);
-//
-//        return questionSide;
-//    }
-//
-//    private JPanel createAnswerSide() {
-//        JPanel answerSide = new JPanel();
-//        answerSide.setLayout(new BoxLayout(answerSide, BoxLayout.PAGE_AXIS));
-//        this.btnPanel = createButtonPanel();
-//
-//        JButton addCardButton = new JButton("Add a new card");
-//        addCardButton.addActionListener(new AddCardWhileReviewListener());
-//        JButton hard = new JButton("Hard");
-//        hard.addActionListener(new HardActionListener());
-//        JButton easy = new JButton("Easy");
-//        easy.addActionListener(new EasyActionListener());
-//
-//        //addReviewCardQuestionPanel();
-//        btnPanel.add(addCardButton);
-//        btnPanel.add(hard);
-//        btnPanel.add(easy);
-//
-//        JPanel answerPanel = new JPanel();
-//        answerSide.add(answerPanel, BorderLayout.CENTER);
-//        answerPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
-//
-////        try {
-////            this.selectedQueue = Reader.readCardQueue(new File(path));
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//
-//        answerPanel.add(new JLabel(currCard.getAnswer()));
-//
-//        answerSide.add(btnPanel, BorderLayout.SOUTH);
-//
-//        return answerSide;
-//    }
-//
-
-
-
 
     private void addCardDialogComponents(JDialog reviewCardFrame) {
         this.btnPanel = createButtonPanel();
@@ -231,7 +126,6 @@ class ReviewListener implements ActionListener {
         return addNewCardPanel;
     }
 
-
     // inner ActionListener class that adds card
     private class AddCardListener implements ActionListener {
         @Override
@@ -287,9 +181,6 @@ class ReviewListener implements ActionListener {
         }
     }
 
-    // inner ActionListener class that reviews cards
-
-
     // inner ActionListener class that adds cards while reviewing
     private class AddCardWhileReviewListener implements ActionListener {
         @Override
@@ -303,8 +194,8 @@ class ReviewListener implements ActionListener {
         private JLabel qaLabel = new JLabel();
         private JButton addCard;
         private JButton showAnswer;
-        private JButton easy;
-        private JButton hard;
+        private JButton easyBtn;
+        private JButton hardBtn;
         private final QueueGUI queueGUI;
         JDialog myDialog;
         private JPanel btnPanel;
@@ -339,17 +230,11 @@ class ReviewListener implements ActionListener {
             reviewCardPanel.add(answerSide, "a");
         }
 
-
         private JPanel createQuestionSide() {
             questionSide.setLayout(new BoxLayout(questionSide, BoxLayout.PAGE_AXIS));
             this.btnPanel = createButtonPanel();
-            addCard = new JButton("Add a new card");
-            addCard.addActionListener(new AddCardWhileReviewListener());
+            setQuestionSideBtns(btnPanel);
 
-            showAnswer = new JButton("Show answer");
-            showAnswer.addActionListener(new ShowAnswerListener());
-
-            //addReviewCardQuestionPanel();
             JPanel questionPanel = new JPanel();
             questionSide.add(questionPanel, BorderLayout.CENTER);
             questionPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
@@ -367,17 +252,7 @@ class ReviewListener implements ActionListener {
             answerSide.setLayout(new BoxLayout(answerSide, BoxLayout.PAGE_AXIS));
             this.btnPanel = createButtonPanel();
 
-            JButton addCardButton = new JButton("Add a new card");
-            addCardButton.addActionListener(new AddCardWhileReviewListener());
-            hard = new JButton("Hard");
-            hard.addActionListener(new HardActionListener());
-            easy = new JButton("Easy");
-            easy.addActionListener(new EasyActionListener());
-
-            //addReviewCardQuestionPanel();
-            btnPanel.add(addCardButton);
-            btnPanel.add(hard);
-            btnPanel.add(easy);
+            setAnswerSideBtns(btnPanel);
 
             JPanel answerPanel = new JPanel();
             answerSide.add(answerPanel, BorderLayout.CENTER);
@@ -397,11 +272,38 @@ class ReviewListener implements ActionListener {
             return btnPanel;
         }
 
-        private class ShowAnswerListener implements ActionListener {
+        private void setAnswerSideBtns(JPanel btnPanel) {
+            JButton addCardButton = new JButton("Add a new card");
+            addCardButton.addActionListener(new AddCardWhileReviewListener());
+            hardBtn = new JButton("Hard");
+            hardBtn.addActionListener(new HardActionListener());
+            easyBtn = new JButton("Easy");
+            easyBtn.addActionListener(new EasyActionListener());
 
+            btnPanel.add(addCardButton);
+            btnPanel.add(hardBtn);
+            btnPanel.add(easyBtn);
+        }
+
+        private void setQuestionSideBtns(JPanel btnPanel) {
+            addCard = new JButton("Add a new card");
+            addCard.addActionListener(new AddCardWhileReviewListener());
+
+            showAnswer = new JButton("Show answer");
+            showAnswer.addActionListener(new ShowAnswerListener());
+
+            btnPanel.add(addCard);
+            btnPanel.add(showAnswer);
+        }
+
+        private class ShowAnswerListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                qaLabel.setText(selectedQueue.peekNextCard().getAnswer());
+                try {
+                    qaLabel.setText(selectedQueue.peekNextCard().getAnswer());
+                } catch (NoMoreToReviewException exception) {
+                    exception.printStackTrace();
+                }
                 answerSide.removeAll();
                 answerSide.repaint();
                 answerSide.revalidate();
@@ -409,17 +311,7 @@ class ReviewListener implements ActionListener {
                 answerSide.setLayout(new BoxLayout(answerSide, BoxLayout.PAGE_AXIS));
                 btnPanel = createButtonPanel();
 
-                JButton addCardButton = new JButton("Add a new card");
-                addCardButton.addActionListener(new AddCardWhileReviewListener());
-                hard = new JButton("Hard");
-                hard.addActionListener(new HardActionListener());
-                easy = new JButton("Easy");
-                easy.addActionListener(new EasyActionListener());
-
-                //addReviewCardQuestionPanel();
-                btnPanel.add(addCardButton);
-                btnPanel.add(hard);
-                btnPanel.add(easy);
+                setAnswerSideBtns(btnPanel);
 
                 JPanel answerPanel = new JPanel();
                 answerSide.add(answerPanel, BorderLayout.CENTER);
@@ -436,72 +328,58 @@ class ReviewListener implements ActionListener {
         private class HardActionListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedQueue.updateQueue(false);
+                saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
                 try {
-                    selectedQueue.updateQueue(false);
-                    saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
+                    qaLabel.setText(selectedQueue.peekNextCard().getQuestion());
+                    questionSide.removeAll();
+                    questionSide.repaint();
+                    questionSide.revalidate();
+                    questionSide.setLayout(new BoxLayout(questionSide, BoxLayout.PAGE_AXIS));
+                    btnPanel = createButtonPanel();
+                    setQuestionSideBtns(btnPanel);
+
+                    //addReviewCardQuestionPanel();
+                    JPanel questionPanel = new JPanel();
+                    questionSide.add(questionPanel, BorderLayout.CENTER);
+                    questionPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
+                    questionPanel.add(qaLabel);
+
+                    questionSide.add(btnPanel, BorderLayout.SOUTH);
+                    cl.show(reviewCardPanel, "q");
                 } catch (NoMoreToReviewException exception) {
-                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today are reviewed!");
+                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today have been reviewed!");
                 }
-                qaLabel.setText(selectedQueue.peekNextCard().getQuestion());
-                questionSide.removeAll();
-                questionSide.repaint();
-                questionSide.revalidate();
-                questionSide.setLayout(new BoxLayout(questionSide, BoxLayout.PAGE_AXIS));
-                btnPanel = createButtonPanel();
-                addCard = new JButton("Add a new card");
-                addCard.addActionListener(new AddCardWhileReviewListener());
-
-                showAnswer = new JButton("Show answer");
-                showAnswer.addActionListener(new ShowAnswerListener());
-
-                //addReviewCardQuestionPanel();
-                JPanel questionPanel = new JPanel();
-                questionSide.add(questionPanel, BorderLayout.CENTER);
-                questionPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
-                questionPanel.add(qaLabel);
-
-                btnPanel.add(addCard);
-                btnPanel.add(showAnswer);
-                questionSide.add(btnPanel, BorderLayout.SOUTH);
-                cl.show(reviewCardPanel, "q");
-
             }
         }
 
         private class EasyActionListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedQueue.updateQueue(true);
+                saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
+
                 try {
-                    selectedQueue.updateQueue(true);
-                    saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
+                    qaLabel.setText(selectedQueue.peekNextCard().getQuestion());
+                    questionSide.removeAll();
+                    questionSide.repaint();
+                    questionSide.revalidate();
+                    questionSide.setLayout(new BoxLayout(questionSide, BoxLayout.PAGE_AXIS));
+                    btnPanel = createButtonPanel();
+                    setQuestionSideBtns(btnPanel);
+
+                    //addReviewCardQuestionPanel();
+                    JPanel questionPanel = new JPanel();
+                    questionSide.add(questionPanel, BorderLayout.CENTER);
+                    questionPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
+                    questionPanel.add(qaLabel);
+
+                    questionSide.add(btnPanel, BorderLayout.SOUTH);
+
+                    cl.show(reviewCardPanel, "q");
                 } catch (NoMoreToReviewException exception) {
-                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today are reviewed!");
+                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today have been reviewed!");
                 }
-                qaLabel.setText(selectedQueue.peekNextCard().getQuestion());
-                questionSide.removeAll();
-                questionSide.repaint();
-                questionSide.revalidate();
-                questionSide.setLayout(new BoxLayout(questionSide, BoxLayout.PAGE_AXIS));
-                btnPanel = createButtonPanel();
-                addCard = new JButton("Add a new card");
-                addCard.addActionListener(new AddCardWhileReviewListener());
-
-                showAnswer = new JButton("Show answer");
-                showAnswer.addActionListener(new ShowAnswerListener());
-
-                //addReviewCardQuestionPanel();
-                JPanel questionPanel = new JPanel();
-                questionSide.add(questionPanel, BorderLayout.CENTER);
-                questionPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
-                questionPanel.add(qaLabel);
-
-                btnPanel.add(addCard);
-                btnPanel.add(showAnswer);
-                questionSide.add(btnPanel, BorderLayout.SOUTH);
-
-                //questionSide.revalidate();
-
-                cl.show(reviewCardPanel, "q");
             }
 
         }
@@ -519,6 +397,5 @@ class ReviewListener implements ActionListener {
                 // this is due to a programming error
             }
         }
-
     }
 }
