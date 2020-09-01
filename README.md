@@ -12,7 +12,7 @@ I use a simplified [SM-2][2] algorithm to compute the interval before next time 
 	- If `I(n-1) != 0`,  set `I(n) = I(n-1) * EF`;
 	- If `I(n-1) == 0`, set `I(n) = 1 * EF`\.
 ## Usage
-The JAR file can be found at `out/artifacts/Project_Starter_jar/Project-Starter.jar `.
+The JAR file can be found at `out/artifacts/Memorizable_jar/Project-Starter.jar `.
 
 
 [1]:	https://en.wikipedia.org/wiki/Spaced_repetition
