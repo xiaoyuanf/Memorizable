@@ -63,7 +63,6 @@ class ReviewListener implements ActionListener {
                 this.reviewCardFrame = createAddCardDialog("Add some cards to the deck!");
                 addCardDialogComponents(reviewCardFrame);
             }
-
         }
     }
 

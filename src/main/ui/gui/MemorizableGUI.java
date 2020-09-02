@@ -2,7 +2,6 @@ package ui.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 // GUI of Memorizable
 public class MemorizableGUI extends JFrame {

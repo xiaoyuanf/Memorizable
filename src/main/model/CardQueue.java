@@ -1,11 +1,9 @@
 package model;
 
 import com.google.gson.Gson;
-import exception.EmptyQueueException;
 import exception.NoMoreToReviewException;
 import persistence.Saveable;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
