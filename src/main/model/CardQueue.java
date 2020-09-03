@@ -1,7 +1,6 @@
 package model;
 
 import com.google.gson.Gson;
-import exception.NoMoreToReviewException;
 import persistence.Saveable;
 
 import java.io.PrintWriter;
@@ -34,11 +33,7 @@ public class CardQueue implements Saveable  {
         return myQueue.poll();
     }
 
-    public Card peekNextCard() throws NoMoreToReviewException {
-        Card currCard = myQueue.peek();
-        if (currCard.getNextViewDate().isAfter(now())) {
-            throw new NoMoreToReviewException();
-        }
+    public Card peekNextCard() {
         return myQueue.peek();
     }
 

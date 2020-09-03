@@ -50,15 +50,31 @@ public class Card {
         }
     }
 
-
     public int getInterval() {
         return interval;
+    }
+
+    //EFFECTS: calculates the interval based on user feedback of easy/hard
+    public int estimateInterval(boolean easy) {
+        int estInterval;
+        int easeFactor;
+        if (easy) {
+            easeFactor = 2;
+        } else {
+            easeFactor = 0;
+        }
+        if (this.interval == 0) {
+            estInterval = easeFactor;
+        } else {
+            estInterval = easeFactor * interval;
+        }
+        return estInterval;
     }
 
     //MODIFIES: this
     //EFFECTS: set the nextViewDate to be current date + interval
     public void setSchedule() {
-        nextViewDate = nextViewDate.plusDays(this.getInterval());
+        nextViewDate = LocalDate.now().plusDays(this.getInterval());
     }
 
     public LocalDate getNextViewDate() {

@@ -51,18 +51,37 @@ class CardTest {
         testCard.updateInterval(true);
         testCard.setSchedule();
         assertEquals(testCard.getNextViewDate(), LocalDate.now().plusDays(2));
+
         testCard.updateInterval(true);
         testCard.setSchedule();
-        assertEquals(testCard.getNextViewDate(), LocalDate.now().plusDays(6));
-        LocalDate date = testCard.getNextViewDate();
+        assertEquals(testCard.getNextViewDate(), LocalDate.now().plusDays(4));
+
         testCard.updateInterval(false);
         testCard.setSchedule();
-        assertEquals(testCard.getNextViewDate(), date);
+        assertEquals(testCard.getNextViewDate(), LocalDate.now());
     }
 
     @Test
-    public void testGetNextViewDate() {
+    public void testEstimateInterval() {
+        assertEquals(testCard.getInterval(), 0);
+        assertEquals(testCard.estimateInterval(true), 2);
+        assertEquals(testCard.estimateInterval(false), 0);
 
+        testCard.updateInterval(false);
+        assertEquals(testCard.getInterval(), 0);
+        assertEquals(testCard.estimateInterval(true), 2);
+        assertEquals(testCard.estimateInterval(false), 0);
+
+        testCard.updateInterval(true);
+        assertEquals(testCard.getInterval(), 2);
+        assertEquals(testCard.estimateInterval(true), 4);
+        assertEquals(testCard.estimateInterval(false), 0);
+
+        testCard.updateInterval(true);
+        assertEquals(testCard.getInterval(), 4);
+        assertEquals(testCard.estimateInterval(true), 8);
+        assertEquals(testCard.estimateInterval(false), 0);
     }
+
 
 }

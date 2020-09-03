@@ -2,7 +2,6 @@ package model;
 
 
 import exception.EmptyQuestionException;
-import exception.NoMoreToReviewException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -88,20 +87,9 @@ public class CardQueueTest {
         testQueue.addCard(testCard1);
         testQueue.addCard(testCard2);
         testQueue.updateQueue(true);
-        try {
-            testQueue.peekNextCard();
-        } catch (NoMoreToReviewException exception) {
-            fail("shouldn't catch exception");
-        }
-        assertEquals(testQueue.getSize(), 2);
 
-        testQueue.updateQueue(true);
-        try {
-            testQueue.peekNextCard();
-            fail("Failed to catch exception");
-        } catch (NoMoreToReviewException exception) {
-            // as expected
-        }
+        testQueue.peekNextCard();
+        assertEquals(testQueue.getSize(), 2);
     }
 
     @Test

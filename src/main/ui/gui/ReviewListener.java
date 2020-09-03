@@ -1,7 +1,6 @@
 package ui.gui;
 
 import exception.EmptyQuestionException;
-import exception.NoMoreToReviewException;
 import model.Card;
 import model.CardQueue;
 import persistence.Reader;
@@ -17,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import static java.time.LocalDate.now;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 // ActionListener class that reviews a deck
@@ -55,13 +55,13 @@ class ReviewListener implements ActionListener {
             this.reviewCardFrame = createAddCardDialog("Add some cards to the deck first!");
             addCardDialogComponents(reviewCardFrame);
         } else {
-            try {
-                currCard = selectedQueue.peekNextCard();
-                this.reviewCardFrame = new ReviewCardDialog(queueGUI);
-            } catch (NoMoreToReviewException exception) {
+            currCard = selectedQueue.peekNextCard();
+            if (currCard.getNextViewDate().isAfter(now())) {
                 JOptionPane.showMessageDialog(null, "All cards due today have been reviewed! Try add some new cards.");
                 this.reviewCardFrame = createAddCardDialog("Add some cards to the deck!");
                 addCardDialogComponents(reviewCardFrame);
+            } else {
+                this.reviewCardFrame = new ReviewCardDialog(queueGUI);
             }
         }
     }
@@ -274,9 +274,9 @@ class ReviewListener implements ActionListener {
         private void setAnswerSideBtns(JPanel btnPanel) {
             JButton addCardButton = new JButton("Add a new card");
             addCardButton.addActionListener(new AddCardWhileReviewListener());
-            hardBtn = new JButton("Hard");
+            hardBtn = new JButton("<html>Hard<br/>" + selectedQueue.peekNextCard().estimateInterval(false) + "</html>");
             hardBtn.addActionListener(new HardActionListener());
-            easyBtn = new JButton("Easy");
+            easyBtn = new JButton("<html>Easy<br/>" + currCard.estimateInterval(true) + "</html>");
             easyBtn.addActionListener(new EasyActionListener());
 
             btnPanel.add(addCardButton);
@@ -298,11 +298,8 @@ class ReviewListener implements ActionListener {
         private class ShowAnswerListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    qaLabel.setText(selectedQueue.peekNextCard().getAnswer());
-                } catch (NoMoreToReviewException exception) {
-                    exception.printStackTrace();
-                }
+                qaLabel.setText(selectedQueue.peekNextCard().getAnswer());
+
                 answerSide.removeAll();
                 answerSide.repaint();
                 answerSide.revalidate();
@@ -329,8 +326,11 @@ class ReviewListener implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 selectedQueue.updateQueue(false);
                 saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
-                try {
-                    qaLabel.setText(selectedQueue.peekNextCard().getQuestion());
+                currCard = selectedQueue.peekNextCard();
+                if (currCard.getNextViewDate().isAfter(now())) {
+                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today have been reviewed!");
+                } else {
+                    qaLabel.setText(currCard.getQuestion());
                     questionSide.removeAll();
                     questionSide.repaint();
                     questionSide.revalidate();
@@ -338,7 +338,6 @@ class ReviewListener implements ActionListener {
                     btnPanel = createButtonPanel();
                     setQuestionSideBtns(btnPanel);
 
-                    //addReviewCardQuestionPanel();
                     JPanel questionPanel = new JPanel();
                     questionSide.add(questionPanel, BorderLayout.CENTER);
                     questionPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
@@ -346,8 +345,6 @@ class ReviewListener implements ActionListener {
 
                     questionSide.add(btnPanel, BorderLayout.SOUTH);
                     cl.show(reviewCardPanel, "q");
-                } catch (NoMoreToReviewException exception) {
-                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today have been reviewed!");
                 }
             }
         }
@@ -358,7 +355,10 @@ class ReviewListener implements ActionListener {
                 selectedQueue.updateQueue(true);
                 saveQueue(ReviewListener.this.path, ReviewListener.this.selectedQueue);
 
-                try {
+                currCard = selectedQueue.peekNextCard();
+                if (currCard.getNextViewDate().isAfter(now())) {
+                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today have been reviewed!");
+                } else {
                     qaLabel.setText(selectedQueue.peekNextCard().getQuestion());
                     questionSide.removeAll();
                     questionSide.repaint();
@@ -376,8 +376,6 @@ class ReviewListener implements ActionListener {
                     questionSide.add(btnPanel, BorderLayout.SOUTH);
 
                     cl.show(reviewCardPanel, "q");
-                } catch (NoMoreToReviewException exception) {
-                    JOptionPane.showMessageDialog(null, "Congratulations! All cards due today have been reviewed!");
                 }
             }
 
